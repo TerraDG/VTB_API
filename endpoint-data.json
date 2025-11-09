@@ -1,0 +1,75 @@
+{
+  "/auth/bank-token": {
+    "method": "POST",
+    "query": {
+      "client_id": { "value": "team178" },
+      "client_secret": { "value": "0RwXPj7naBAD68elrQ2W8IAn8KmcQkCq" }
+    },
+    "saveResponse": {
+      "access_token": { "jsonPointer": "/access_token" }
+    }
+  },
+
+  "/account-consents/request": {
+    "method": "POST",
+    "headers": {
+      "Authorization": {
+        "from": "/auth/bank-token",
+        "jsonPointer": "/access_token"
+      },
+      "X-Requesting-Bank": { "value": "team178" }
+    },
+    "body": {
+      "client_id": { "value": "team178-1" },
+      "permissions": { "value": ["ReadAccountsDetail", "ReadBalances", "ReadTransactionsDetail"] },
+      "reason": { "value": "Агрегация счетов для HackAPI" },
+      "requesting_bank": { "value": "team178" },
+      "requesting_bank_name": { "value": "Team 178 App" }
+    },
+    "saveResponse": {
+      "consent_id": { "jsonPointer": "/consent_id" }
+    }
+  },
+
+  "/account-consents/{consent_id}": {
+    "method": "GET",
+    "pathParams": {
+      "consent_id": {
+        "from": "/account-consents/request",
+        "jsonPointer": "/consent_id"
+      }
+    },
+    "headers": {
+      "Authorization": {
+        "from": "/auth/bank-token",
+        "jsonPointer": "/access_token"
+      },
+      "X-Fapi-Interaction-Id": { "value": "team178" }
+    },
+    "saveResponse": {
+      "status": { "jsonPointer": "/data/status" },
+      "permissions": { "jsonPointer": "/data/permissions" }
+    }
+  },
+
+  "/account-consents/{consent_id}": {
+    "method": "DELETE",
+    "pathParams": {
+      "consent_id": {
+        "from": "/account-consents/request",
+        "jsonPointer": "/consent_id"
+      }
+    },
+    "headers": {
+      "Authorization": {
+        "from": "/auth/bank-token",
+        "jsonPointer": "/access_token"
+      },
+      "x-fapi-interaction-id": { "value": "team178" }
+    },
+    "saveResponse": {
+      "deleted": { "value": "true" }
+    }
+  }
+
+}
