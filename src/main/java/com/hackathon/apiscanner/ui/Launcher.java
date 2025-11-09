@@ -268,6 +268,7 @@ public class Launcher extends JFrame {
             );
 
             File src = new File("report.html");
+
             if (src.exists()) {
                 java.nio.file.Files.copy(src.toPath(), out.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 appendLog("Saved report to: " + out.getAbsolutePath());
